@@ -17,11 +17,6 @@ let alias = require("../data/alias.json");
 let config = require("../config/config.json")
 const fs = require("fs");
 const uri = "mongodb://localhost:27017/";
-// const mongoclient = new MongoClient(uri, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-
 
 
 module.exports.run = async (client, message, args) => {
