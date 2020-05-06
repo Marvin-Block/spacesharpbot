@@ -49,7 +49,7 @@ try {
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`);
     logger.run("info", `Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`,__filename.split('\\').pop());
-    client.user.setActivity(`https://discord.gg/9AQv2pF`);
+    client.user.setActivity(`https://discord.gg/9AQv2pF`, {type: "WATCHING"});
     watch('./config/config.json', function(evt, name) {
         logger.run("info", `${evt} ${name}`,__filename.split('\\').pop());
         if (evt === 'update') {
