@@ -1,0 +1,5 @@
+{
+    "token": "ENTER YOUR DISCORD BOT TOKEN",
+    "prefix": "ENTER PREFIX LIEK . or - or _ or , or ; or : ",
+    "logDir": "ENTER LOG PATH LIKE -> ./logs/ or  C:/LOGS/"
+}
