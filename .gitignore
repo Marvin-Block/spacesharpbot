@@ -96,7 +96,5 @@ typings/
 # SQLite Databse
 *.db
 
-# config file
-config.json
-
 # End of https://www.gitignore.io/api/node
+config/config.json

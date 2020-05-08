@@ -17,17 +17,16 @@ const fs = require("fs");
 const uri = "mongodb://localhost:27017/";
 
 
-module.exports.run = async(client, message, args) => {
+module.exports.run = async (client, message, args) => {
     try {
-
         switch (args[0]) {
             case "list":
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
-                }, function(err, db) {
+                }, function (err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
-                        message.channel.send(":x: Seems like there was an error setting your alias");
+                        message.channel.send(":x: Error");
                     }
                     var dbo = db.db("Spacesharp");
                     dbo.collection("alias").find().toArray().then(x => {
@@ -43,11 +42,15 @@ module.exports.run = async(client, message, args) => {
                             body += `> ${entry.id}.) ${entry.name} => ${content}\n\n`
                         })
                         if (body.length > 2000) {
-                            message.channel.send("Error. Please contact an Admin and check the logs :)")
+                            message.channel.send(":x: Error. Please contact an Admin and check the logs :)")
                             throw "Message has over 2000 Characters. Implement a multi message solution";
                         }
-                        message.channel.send(body)
-                        logger.run("info", "x", __filename.split('\\').pop());
+                        else if(body.length == 0){
+                            message.channel.send(":x: There are no entries in this list.")
+                        }else{
+                            message.channel.send(body)
+                        };
+                        
                         db.close();
                     }).catch(err => {
                         logger.run("error", err, __filename.split('\\').pop());
@@ -65,7 +68,7 @@ module.exports.run = async(client, message, args) => {
                     }
                     MongoClient.connect(uri, {
                         useUnifiedTopology: true
-                    }, function(err, db) {
+                    }, function (err, db) {
                         if (err) {
                             logger.run("error", err, __filename.split('\\').pop());
                             message.channel.send(":x: Seems like there was an error setting your alias");
@@ -87,7 +90,7 @@ module.exports.run = async(client, message, args) => {
                                     content: content
                                 };
                                 // 
-                                dbo.collection("alias").insertOne(myobj, function(err, res) {
+                                dbo.collection("alias").insertOne(myobj, function (err, res) {
                                     if (err) {
                                         logger.run("error", err, __filename.split('\\').pop());
                                         message.channel.send(":x: Seems like there was an error setting your alias");
@@ -108,6 +111,38 @@ module.exports.run = async(client, message, args) => {
                 break;
 
             case "remove":
+                MongoClient.connect(uri, {
+                    useUnifiedTopology: true
+                }, function (err, db) {
+                    if (err) {
+                        logger.run("error", err, __filename.split('\\').pop());
+                        message.channel.send(":x: Error");
+                    }
+                    var dbo = db.db("Spacesharp");
+                    if (args[1] == "all" && message.guild.members.cache.get(message.author.id).hasPermission("ADMINISTRATOR")) {
+                        dbo.collection("alias").deleteMany({}).then(x => {
+                            message.channel.send(":white_check_mark: All entries have been delelted.")
+                            logger.run("info", "All documents, from the collection alias have been dropped.", __filename.split('\\').pop());
+                            db.close();
+                        }).catch(err => {
+                            logger.run("error", err, __filename.split('\\').pop());
+                        });
+                    } else {
+                        dbo.collection("alias").deleteOne({
+                            name: args[1]
+                        }).then(x => {
+                            message.channel.send(":white_check_mark: The alias "+args[1]+" has been removed.")
+                            logger.run("info", "An alias has been removed.", __filename.split('\\').pop());
+                            db.close();
+                        }).catch(err => {
+                            logger.run("error", err, __filename.split('\\').pop());
+                        });
+                    }
+
+                }, );
+
+
+
                 break;
 
             case "help":
@@ -127,13 +162,17 @@ module.exports.run = async(client, message, args) => {
             default:
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
-                }, function(err, db) {
+                }, function (err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
                         message.channel.send(":x: Seems like there was an error setting your alias");
                     }
                     var dbo = db.db("Spacesharp");
-                    dbo.collection("alias").findOne({ name: args[0] }, { _id: 0 }).then(entry => {
+                    dbo.collection("alias").findOne({
+                        name: args[0]
+                    }, {
+                        _id: 0
+                    }).then(entry => {
                         if (entry != null) {
                             return message.channel.send(entry.content);
                         } else {
