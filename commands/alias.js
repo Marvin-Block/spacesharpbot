@@ -172,10 +172,10 @@ module.exports.run = async(client, message, args) => {
                         _id: 0
                     }).then(entry => {
                         if (entry != null) {
-                            message.delete(200);
+                            message.delete();
                             return message.channel.send(entry.content);
                         } else {
-                            message.delete(200);
+                            message.delete();
                             return message.channel.send(":x: The alias " + args[0] + " doesn't exist. Use `" + config.prefix + "alias list` to see a list of all availiable options");
                         }
 

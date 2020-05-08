@@ -14,16 +14,16 @@ client.commands = new discord.Collection();
 
 //load modules out of modules directory
 try {
-    logger.run("info", `===Loading Modules===`,__filename.split('\\').pop())
+    logger.run("info", `===Loading Modules===`, __filename.split('\\').pop())
     fs.readdirSync(__dirname + '/modules/').forEach(function(file) {
         if (file.match(/\.js$/) !== null && file !== 'index.js') {
-            logger.run("info", `${file} loaded!`,__filename.split('\\').pop())
+            logger.run("info", `${file} loaded!`, __filename.split('\\').pop())
             let name = file.replace('.js', '');
             exports[name] = require('./modules/' + file);
         }
     });
 } catch (err) {
-    logger.run("error", err,__filename.split('\\').pop());
+    logger.run("error", err, __filename.split('\\').pop());
 }
 
 //load commands out of commands directory
@@ -31,27 +31,27 @@ try {
     fs.readdir("./commands/", (err, files) => {
         let jsfile = files.filter(f => f.split(".").pop() === "js")
         if (jsfile.length <= 0) {
-            logger.run("info", `Couldn't find commands.`,__filename.split('\\').pop())
+            logger.run("info", `Couldn't find commands.`, __filename.split('\\').pop())
             return;
         }
-        logger.run("info", `===Loading Commands===`,__filename.split('\\').pop())
+        logger.run("info", `===Loading Commands===`, __filename.split('\\').pop())
         jsfile.forEach((f, i) => {
             let props = require(`./commands/${f}`);
-            logger.run("info", `${f} loaded!`,__filename.split('\\').pop())
+            logger.run("info", `${f} loaded!`, __filename.split('\\').pop())
             client.commands.set(props.help.name, props);
         });
     });
 } catch (err) {
-    logger.run("error", err,__filename.split('\\').pop());
+    logger.run("error", err, __filename.split('\\').pop());
 }
 
 //Ready event ( Set Activity & refresh config in case of change)
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`);
-    logger.run("info", `Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`,__filename.split('\\').pop());
-    client.user.setActivity(`https://discord.gg/9AQv2pF`, {type: "WATCHING"});
+    logger.run("info", `Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels.`, __filename.split('\\').pop());
+    client.user.setActivity(`https://discord.gg/9AQv2pF`);
     watch('./config/config.json', function(evt, name) {
-        logger.run("info", `${evt} ${name}`,__filename.split('\\').pop());
+        logger.run("info", `${evt} ${name}`, __filename.split('\\').pop());
         if (evt === 'update') {
             delete require.cache[require.resolve('./config/config.json')];
             config = require('./config/config.json');
