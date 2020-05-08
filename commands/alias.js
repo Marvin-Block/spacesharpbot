@@ -118,6 +118,7 @@ module.exports.run = async(client, message, args) => {
                     .setDescription('**.alias "name"** | will trigger an alias\n**.alias list** | will list all aliases available\n**.alias add "name" content** | will add a new alias\n**.alias remove "ID"** | will remove the alias')
                     .setTimestamp()
                     .setFooter('This is still a work in progress', 'https://cdn.discordapp.com/attachments/438099932964978692/705434926786543775/signs.png');
+                message.delete(200);
                 message.channel.send(``, {
                     embed: embed
                 });
