@@ -17,13 +17,13 @@ const fs = require("fs");
 const uri = "mongodb://localhost:27017/";
 
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async(client, message, args) => {
     try {
         switch (args[0]) {
             case "list":
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
-                }, function (err, db) {
+                }, function(err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
                         message.channel.send(":x: Error");
@@ -44,13 +44,12 @@ module.exports.run = async (client, message, args) => {
                         if (body.length > 2000) {
                             message.channel.send(":x: Error. Please contact an Admin and check the logs :)")
                             throw "Message has over 2000 Characters. Implement a multi message solution";
-                        }
-                        else if(body.length == 0){
+                        } else if (body.length == 0) {
                             message.channel.send(":x: There are no entries in this list.")
-                        }else{
+                        } else {
                             message.channel.send(body)
                         };
-                        
+
                         db.close();
                     }).catch(err => {
                         logger.run("error", err, __filename.split('\\').pop());
@@ -68,7 +67,7 @@ module.exports.run = async (client, message, args) => {
                     }
                     MongoClient.connect(uri, {
                         useUnifiedTopology: true
-                    }, function (err, db) {
+                    }, function(err, db) {
                         if (err) {
                             logger.run("error", err, __filename.split('\\').pop());
                             message.channel.send(":x: Seems like there was an error setting your alias");
@@ -90,7 +89,7 @@ module.exports.run = async (client, message, args) => {
                                     content: content
                                 };
                                 // 
-                                dbo.collection("alias").insertOne(myobj, function (err, res) {
+                                dbo.collection("alias").insertOne(myobj, function(err, res) {
                                     if (err) {
                                         logger.run("error", err, __filename.split('\\').pop());
                                         message.channel.send(":x: Seems like there was an error setting your alias");
@@ -113,7 +112,7 @@ module.exports.run = async (client, message, args) => {
             case "remove":
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
-                }, function (err, db) {
+                }, function(err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
                         message.channel.send(":x: Error");
@@ -131,7 +130,7 @@ module.exports.run = async (client, message, args) => {
                         dbo.collection("alias").deleteOne({
                             name: args[1]
                         }).then(x => {
-                            message.channel.send(":white_check_mark: The alias "+args[1]+" has been removed.")
+                            message.channel.send(":white_check_mark: The alias " + args[1] + " has been removed.")
                             logger.run("info", "An alias has been removed.", __filename.split('\\').pop());
                             db.close();
                         }).catch(err => {
@@ -150,10 +149,9 @@ module.exports.run = async (client, message, args) => {
                     .setColor('#0099ff')
                     .setTitle('Available options for alias')
                     .setThumbnail('https://cdn.discordapp.com/attachments/438099932964978692/705434926786543775/signs.png')
-                    .setDescription('**.alias "name"** | will trigger an alias\n**.alias list** | will list all aliases available\n**.alias add "name" content** | will add a new alias\n**.alias remove "ID"** | will remove the alias')
+                    .setDescription('**' + config.prefix + 'alias "name"** | will trigger an alias\n**' + config.prefix + 'alias list** | will list all aliases available\n**' + config.prefix + 'alias add "name" content** | will add a new alias\n**' + config.prefix + 'alias remove "ID"** | will remove the alias')
                     .setTimestamp()
                     .setFooter('This is still a work in progress', 'https://cdn.discordapp.com/attachments/438099932964978692/705434926786543775/signs.png');
-                message.delete(200);
                 message.channel.send(``, {
                     embed: embed
                 });
@@ -162,7 +160,7 @@ module.exports.run = async (client, message, args) => {
             default:
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
-                }, function (err, db) {
+                }, function(err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
                         message.channel.send(":x: Seems like there was an error setting your alias");
@@ -174,9 +172,11 @@ module.exports.run = async (client, message, args) => {
                         _id: 0
                     }).then(entry => {
                         if (entry != null) {
+                            message.delete(200);
                             return message.channel.send(entry.content);
                         } else {
-                            return message.channel.send(":x: The alias " + args[0] + " doesn't exist. Use `.alias list` to see a list of all availiable options");
+                            message.delete(200);
+                            return message.channel.send(":x: The alias " + args[0] + " doesn't exist. Use `" + config.prefix + "alias list` to see a list of all availiable options");
                         }
 
                     }).catch(err => {
