@@ -74,16 +74,16 @@ client.on("message", async message => {
 
 //Handle Modules
 client.on("message", async message => {
-    if (message.author.bot) return;
-    if (message.channel.type === "dm") return;
     //exports.module.run(client,message);
 });
 
 client.on('guildMemberAdd', async member => {
-    if (member.guild.id !== config.serverID) return;
-    let guild = client.guilds.get(config.serverID);
     //exports.module.run(client,member);
 });
+
+client.on('channelCreate', async function(channel) {
+    exports.autobot.run(client, channel, null)
+})
 
 client.on('guildMemberUpdate', async function(oldmember, newmember) {
     //exports.module.run(client, oldmember, newmember);
@@ -101,5 +101,8 @@ client.on("emojiUpdate", (oldEmoji, newEmoji) => {
     //exports.module.run(Emoji);
 });
 
+client.on("messageReactionAdd", async function(messageReaction, user) {
+    exports.autobot.run(client, null, messageReaction)
+})
 
 client.login(config.token);
