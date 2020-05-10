@@ -1,7 +1,7 @@
 /*
  *Todo:
- *Imrpove message sent do user to make sure what exactly their issue is / was
- *Add Attachment upload
+ *Multiple word Issue name (track quotationmarks for start / end)
+ *
  *
  *
  *
@@ -18,6 +18,8 @@ const uri = "mongodb://localhost:27017/";
 
 
 module.exports.run = async(client, message, args) => {
+    //work in progress
+    return;
     try {
         switch (args[0]) {
             case "list":
@@ -29,17 +31,25 @@ module.exports.run = async(client, message, args) => {
                         message.channel.send(":x: Error");
                     }
                     var dbo = db.db("Spacesharp");
-                    dbo.collection("alias").find().toArray().then(x => {
+                    dbo.collection("issue").find().toArray().then(x => {
                         let body = "";
                         x.forEach(entry => {
-                            let content = "";
-                            entry.content.split(" ").forEach(word => {
+                            let issue = "";
+                            let fix = "";
+                            entry.Issue.split(" ").forEach(word => {
                                 if (word.match(reg) != null && word.match(reg).length > 0) {
                                     word = word.replace(/^/, '<').replace(/$/, '>');
                                 }
-                                content += word + " ";
+                                issue += word + " ";
                             })
-                            body += `> ${entry.id}.) ${entry.name} => ${content}\n\n`
+                            if (entry.Fix == null) return;
+                            entry.Fix.split(" ").forEach(word => {
+                                if (word.match(reg) != null && word.match(reg).length > 0) {
+                                    word = word.replace(/^/, '<').replace(/$/, '>');
+                                }
+                                fix += word + " ";
+                            })
+                            body += `> ${entry.IssueID}.) ${entry.IssueName} => ${issue}\nFix: ${fix}\n\n`
                         })
                         if (body.length > 2000) {
                             message.channel.send(":x: Error. Please contact an Admin and check the logs :)")
@@ -58,8 +68,8 @@ module.exports.run = async(client, message, args) => {
 
                 break;
 
-            case "add":
-                if (args.length <= 2) return message.channel.send(":x: Error creating Alias")
+            case "create":
+                if (args.length <= 2) return message.channel.send(":x: Error creating Issue")
                 if (args[1].startsWith('"') && args[1].endsWith('"') && args[1].replace(/^"|"$/g, '').length != 0) {
                     let content = ""
                     for (let i = 2; i < args.length; i++) {
@@ -70,10 +80,10 @@ module.exports.run = async(client, message, args) => {
                     }, function(err, db) {
                         if (err) {
                             logger.run("error", err, __filename.split('\\').pop());
-                            message.channel.send(":x: Seems like there was an error setting your alias");
+                            message.channel.send(":x: Seems like there was an error setting your issue");
                         }
                         var dbo = db.db("Spacesharp");
-                        dbo.collection("alias").find().toArray().then(x => {
+                        dbo.collection("issue").find().toArray().then(x => {
                             let isUnique = true;
                             let num = 0;
                             x.forEach(entry => {
@@ -88,31 +98,35 @@ module.exports.run = async(client, message, args) => {
 
                             if (isUnique == true) {
                                 var myobj = {
-                                    id: num + 1,
-                                    name: args[1].replace(/^"|"$/g, ''),
-                                    content: content
+                                    IssueID: num + 1,
+                                    IssueName: args[1].replace(/^"|"$/g, ''),
+                                    Issue: content,
+                                    Fix: null
                                 };
                                 // 
-                                dbo.collection("alias").insertOne(myobj, function(err, res) {
+                                dbo.collection("issue").insertOne(myobj, function(err, res) {
                                     if (err) {
                                         logger.run("error", err, __filename.split('\\').pop());
-                                        message.channel.send(":x: Seems like there was an error setting your alias");
+                                        message.channel.send(":x: Seems like there was an error setting your issue");
                                     }
-                                    logger.run("info", "A new Alias has been added", __filename.split('\\').pop())
+                                    logger.run("info", "A new issue has been added", __filename.split('\\').pop())
                                     db.close();
-                                    return message.channel.send(":white_check_mark: Alias **__" + args[1].replace(/^"|"$/g, '') + "__** was created succesfully")
+                                    return message.channel.send(":white_check_mark: issue **__" + args[1].replace(/^"|"$/g, '') + "__** was created succesfully")
                                 });
                             } else {
-                                return message.channel.send(":x: An alias with that already exists");
+                                return message.channel.send(":x: An issue with that already exists");
                             }
                         }).catch(err => {
                             logger.run("error", err, __filename.split('\\').pop())
                         })
                     }, );
-                } else return message.channel.send(":x: Error creating Alias");
+                } else return message.channel.send(":x: Error creating issue");
 
                 break;
 
+            case "fix":
+
+                break;
             case "remove":
                 MongoClient.connect(uri, {
                     useUnifiedTopology: true
@@ -123,19 +137,19 @@ module.exports.run = async(client, message, args) => {
                     }
                     var dbo = db.db("Spacesharp");
                     if (args[1] == "all" && message.guild.members.cache.get(message.author.id).hasPermission("ADMINISTRATOR")) {
-                        dbo.collection("alias").deleteMany({}).then(x => {
+                        dbo.collection("issue").deleteMany({}).then(x => {
                             message.channel.send(":white_check_mark: All entries have been delelted.")
-                            logger.run("info", "All documents, from the collection alias have been dropped.", __filename.split('\\').pop());
+                            logger.run("info", "All documents, from the collection issue have been dropped.", __filename.split('\\').pop());
                             db.close();
                         }).catch(err => {
                             logger.run("error", err, __filename.split('\\').pop());
                         });
                     } else {
-                        dbo.collection("alias").deleteOne({
+                        dbo.collection("issue").deleteOne({
                             name: args[1]
                         }).then(x => {
-                            message.channel.send(":white_check_mark: The alias " + args[1] + " has been removed.")
-                            logger.run("info", "An alias has been removed.", __filename.split('\\').pop());
+                            message.channel.send(":white_check_mark: The issue " + args[1] + " has been removed.")
+                            logger.run("info", "An issue has been removed.", __filename.split('\\').pop());
                             db.close();
                         }).catch(err => {
                             logger.run("error", err, __filename.split('\\').pop());
@@ -144,16 +158,14 @@ module.exports.run = async(client, message, args) => {
 
                 }, );
 
-
-
                 break;
 
             case "help":
                 const embed = new discord.MessageEmbed()
                     .setColor('#0099ff')
-                    .setTitle('Available options for alias')
+                    .setTitle('Available options for issue')
                     .setThumbnail('https://cdn.discordapp.com/attachments/438099932964978692/705434926786543775/signs.png')
-                    .setDescription('**' + config.prefix + 'alias "name"** | will trigger an alias\n**' + config.prefix + 'alias list** | will list all aliases available\n**' + config.prefix + 'alias add "name" content** | will add a new alias\n**' + config.prefix + 'alias remove "ID"** | will remove the alias')
+                    .setDescription('**' + config.prefix + 'issue "name"** | will trigger an issue\n**' + config.prefix + 'issue list** | will list all issuees available\n**' + config.prefix + 'issue add "name" content** | will add a new issue\n**' + config.prefix + 'issue remove "ID"** | will remove the issue')
                     .setTimestamp()
                     .setFooter('This is still a work in progress', 'https://cdn.discordapp.com/attachments/438099932964978692/705434926786543775/signs.png');
                 message.channel.send(``, {
@@ -167,10 +179,10 @@ module.exports.run = async(client, message, args) => {
                 }, function(err, db) {
                     if (err) {
                         logger.run("error", err, __filename.split('\\').pop());
-                        message.channel.send(":x: Seems like there was an error setting your alias");
+                        message.channel.send(":x: Seems like there was an error setting your issue");
                     }
                     var dbo = db.db("Spacesharp");
-                    dbo.collection("alias").findOne({
+                    dbo.collection("issue").findOne({
                         name: args[0]
                     }, {
                         _id: 0
@@ -180,7 +192,7 @@ module.exports.run = async(client, message, args) => {
                             return message.channel.send(entry.content);
                         } else {
                             message.delete();
-                            return message.channel.send(":x: The alias " + args[0] + " doesn't exist. Use `" + config.prefix + "alias list` to see a list of all availiable options");
+                            return message.channel.send(":x: The issue " + args[0] + " doesn't exist. Use `" + config.prefix + "issue list` to see a list of all availiable options");
                         }
 
                     }).catch(err => {
@@ -195,5 +207,5 @@ module.exports.run = async(client, message, args) => {
 }
 
 module.exports.help = {
-    name: "alias"
+    name: "issue"
 }

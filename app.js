@@ -102,7 +102,7 @@ client.on("emojiUpdate", (oldEmoji, newEmoji) => {
 });
 
 client.on("messageReactionAdd", async function(messageReaction, user) {
-    exports.autobot.run(client, null, messageReaction)
+    //exports.autobot.run(client, null, messageReaction)
 })
 
 client.login(config.token);
