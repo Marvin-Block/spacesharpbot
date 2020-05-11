@@ -88,7 +88,7 @@ module.exports.run = async(client, message, args) => {
 
                             if (isUnique == true) {
                                 var myobj = {
-                                    id: num + 1,
+                                    id: parseInt(num + 1),
                                     name: args[1].replace(/^"|"$/g, ''),
                                     content: content
                                 };
@@ -132,7 +132,7 @@ module.exports.run = async(client, message, args) => {
                         });
                     } else {
                         dbo.collection("alias").deleteOne({
-                            name: args[1]
+                            id: parseInt(args[1])
                         }).then(x => {
                             message.channel.send(":white_check_mark: The alias " + args[1] + " has been removed.")
                             logger.run("info", "An alias has been removed.", __filename.split('\\').pop());
