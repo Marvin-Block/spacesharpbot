@@ -73,7 +73,7 @@ module.exports.run = async (client, message, args) => {
                 break;
 
             case "create":
-                let content = ""
+                var content = ""
                 for (let i = 1; i < args.length; i++) {
                     content += args[i] + ' '
                 }
@@ -131,7 +131,7 @@ module.exports.run = async (client, message, args) => {
                 break;
 
             case "fix":
-                let content = ""
+                var content = ""
                 for (let i = 2; i < args.length; i++) {
                     content += args[i] + ' '
                 }
