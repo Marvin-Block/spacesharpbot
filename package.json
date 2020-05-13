@@ -4,7 +4,7 @@
     "description": "Discord bot for SpaceSharp",
     "main": "app.js",
     "scripts": {
-      "start": "node app.js",
+      "start": "node app.js"
     },
     "author": "Muffin#4222",
     "license": "ISC",
