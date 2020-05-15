@@ -1,4 +1,5 @@
-const logger = require("./modules/logger.js")
+const logger = require("./modules/logger.js");
+const ATS = require("./modules/ATS.js");
 let config = require("./config/config.json");
 const discord = require("discord.js");
 const watch = require("node-watch");
@@ -74,7 +75,9 @@ client.on("message", async message => {
 
 //Handle Modules
 client.on("message", async message => {
-    //exports.module.run(client,message);
+    if (message.author.id != '557628352828014614') return;
+    if (message.mentions.users.size != 1) return;
+    ATS.run(message)
 });
 
 client.on('guildMemberAdd', async member => {
@@ -82,7 +85,7 @@ client.on('guildMemberAdd', async member => {
 });
 
 client.on('channelCreate', async function(channel) {
-    exports.autobot.run(client, channel, null)
+    //exports.autobot.run(client, channel, null)
 })
 
 client.on('guildMemberUpdate', async function(oldmember, newmember) {
