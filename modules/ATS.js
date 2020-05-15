@@ -10,7 +10,7 @@ module.exports.run = async(message) => {
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
                 .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
-                .setDescription('Welcome to our Automated Ticket System or in short ATS.\nI will try my best to Assist you with your Issues, Problems and Questions.\nPlease reply with one of the Following Numbers.\n\n**1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n**2.)** I want a refund.\n\n**3.)** I want to report a Bug or an Issue.\n\n**4.)** I have a Problem with my Purchase or my Product.')
+                .setDescription('Welcome to our Automated Ticket System or in short ATS.\nI will try my best to Assist you with your Issues, Problems and Questions.\nPlease reply with one of the Following Numbers.\n\n**1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n**2.)** I want a refund.\n\n**3.)** I want to report a Bug or an Issue.\n\n**4.)** I have a Problem with my Purchase or my Product (HWID).')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
             message.channel.send(`You have a total of 5 tries before the Ticket will be Terminated.`, {
@@ -59,7 +59,7 @@ module.exports.run = async(message) => {
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
-                            .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!322659763643088897>')
+                            .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!650128095856033794> or <@!306082546209521664>')
                             .setTimestamp()
                             .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
                         message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
