@@ -55,7 +55,6 @@ module.exports.run = async(message) => {
                                         }
                                         logger.run("info", "A new license has been added", __filename.split('\\').pop())
                                         db.close();
-                                    }).then(() => {
                                         let data = '';
                                         https.get("https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1", (res) => {
                                             res.on('data', (chunk) => {
@@ -76,9 +75,7 @@ module.exports.run = async(message) => {
                                         }).on("error", (err) => {
                                             logger.run("error", err)
                                         });
-                                    }).catch(err => {
-                                        logger.run("error", err, __filename.split('\\').pop())
-                                    })
+                                    });
                                 } else {
                                     var embed = new discord.MessageEmbed()
                                         .setColor('#FA759E')
