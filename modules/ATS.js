@@ -35,17 +35,10 @@ module.exports.run = async(message) => {
                                 message.channel.send(":x: Seems like there was an error");
                             }
                             var dbo = db.db("Spacesharp");
-                            dbo.collection("license").find().toArray().then(x => {
-                                let isUnique = true;
-                                x.forEach(entry => {
-                                    if (entry.UserID == message.author.id) {
-                                        isUnique = false;
-                                    }
-                                })
-
-                                if (isUnique == true) {
+                            dbo.collection("license").find({ UserID: { $eq: collected.author.id } }).toArray().then(x => {
+                                if (x.length > 0) {
                                     var myobj = {
-                                        UserID: message.author.id
+                                        UserID: collected.author.id
                                     };
                                     // 
                                     dbo.collection("license").insertOne(myobj, function(err, res) {
