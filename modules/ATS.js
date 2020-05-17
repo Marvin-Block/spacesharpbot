@@ -36,7 +36,7 @@ module.exports.run = async(message) => {
                             }
                             var dbo = db.db("Spacesharp");
                             dbo.collection("license").find({ UserID: { $eq: collected.author.id } }).toArray().then(x => {
-                                if (x.length > 0) {
+                                if (x.length < 1) {
                                     var myobj = {
                                         UserID: collected.author.id
                                     };
