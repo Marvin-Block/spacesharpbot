@@ -2,6 +2,8 @@ const discord = require("discord.js");
 const config = require("../config/config.json")
 const logger = require("../modules/logger.js")
 const https = require('https')
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb://localhost:27017/";
 
 
 module.exports.run = async(message) => {
@@ -25,26 +27,75 @@ module.exports.run = async(message) => {
             collector.on('collect', collected => {
                 switch (collected.content) {
                     case "1":
-                        let data = '';
-                        https.get("https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1", (res) => {
-                            res.on('data', (chunk) => {
-                                data += chunk;
-                            });
-                            res.on('end', () => {
-                                var embed = new discord.MessageEmbed()
-                                    .setColor('#FA759E')
-                                    .setTitle('Take your trial, hope you enjoy it')
-                                    .setDescription(data)
-                                    .setTimestamp()
-                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                                message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
-                                    embed: embed
-                                });
-                            });
+                        MongoClient.connect(uri, {
+                            useUnifiedTopology: true
+                        }, function(err, db) {
+                            if (err) {
+                                logger.run("error", err, __filename.split('\\').pop());
+                                message.channel.send(":x: Seems like there was an error");
+                            }
+                            var dbo = db.db("Spacesharp");
+                            dbo.collection("license").find().toArray().then(x => {
+                                let isUnique = true;
+                                x.forEach(entry => {
+                                    if (entry.UserID == message.author.id) {
+                                        isUnique = false;
+                                    }
+                                })
 
-                        }).on("error", (err) => {
-                            logger.run("error", err)
-                        });
+                                if (isUnique == true) {
+                                    var myobj = {
+                                        UserID: message.author.id
+                                    };
+                                    // 
+                                    dbo.collection("license").insertOne(myobj, function(err, res) {
+                                        if (err) {
+                                            logger.run("error", err, __filename.split('\\').pop());
+                                            message.channel.send(":x: Seems like there was an error");
+                                        }
+                                        logger.run("info", "A new license has been added", __filename.split('\\').pop())
+                                        db.close();
+                                    }).then(() => {
+                                        let data = '';
+                                        https.get("https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1", (res) => {
+                                            res.on('data', (chunk) => {
+                                                data += chunk;
+                                            });
+                                            res.on('end', () => {
+                                                var embed = new discord.MessageEmbed()
+                                                    .setColor('#FA759E')
+                                                    .setTitle('Take your trial, hope you enjoy it')
+                                                    .setDescription(data)
+                                                    .setTimestamp()
+                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                                message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                                                    embed: embed
+                                                });
+                                            });
+
+                                        }).on("error", (err) => {
+                                            logger.run("error", err)
+                                        });
+                                    }).catch(err => {
+                                        logger.run("error", err, __filename.split('\\').pop())
+                                    })
+                                } else {
+                                    var embed = new discord.MessageEmbed()
+                                        .setColor('#FA759E')
+                                        .setTitle('Seems like you already had your Trial <:Spout:711654821157142598>')
+                                        .setDescription('You already asked for a trial. Or at least your Discord UserID is in our Databse. If you think this is a mistake make sure to ping any of the Staff Members :)')
+                                        .setTimestamp()
+                                        .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                    return message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                                        embed: embed
+                                    });
+
+                                }
+                            }).catch(err => {
+                                logger.run("error", err, __filename.split('\\').pop())
+                            })
+                        }, );
+
                         break;
                     case "2":
                         var embed = new discord.MessageEmbed()
@@ -98,6 +149,6 @@ module.exports.run = async(message) => {
             });
         }
     } catch (error) {
-        logger.run("error", error)
+        logger.run("error", error, __filename.split('\\').pop())
     }
 }
