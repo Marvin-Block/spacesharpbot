@@ -1,6 +1,8 @@
 const discord = require("discord.js");
 const config = require("../config/config.json")
 const logger = require("../modules/logger.js")
+const https = require('https')
+
 
 module.exports.run = async(message) => {
     try {
@@ -23,14 +25,25 @@ module.exports.run = async(message) => {
             collector.on('collect', collected => {
                 switch (collected.content) {
                     case "1":
-                        var embed = new discord.MessageEmbed()
-                            .setColor('#FA759E')
-                            .setTitle('I\'m sorry, but there\'s no Trial for you <:cryrage:710881155532062871>')
-                            .setDescription('Spacesharp does not offer any Kind of Testing or Trial phase. You can buy the 1 Day version of Spacesharp over [here](https://discordapp.com/channels/699964879003713568/708337216010715198/708348925610033183). If you Like our Product please consider telling your friends about it. In case you have any ;)')
-                            .setTimestamp()
-                            .setFooter('No trial for you Captain :(', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
-                            embed: embed
+                        let data = '';
+                        https.get("https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1", (res) => {
+                            res.on('data', (chunk) => {
+                                data += chunk;
+                            });
+                            res.on('end', () => {
+                                var embed = new discord.MessageEmbed()
+                                    .setColor('#FA759E')
+                                    .setTitle('Take your trial, hope you enjoy it')
+                                    .setDescription(data)
+                                    .setTimestamp()
+                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                                    embed: embed
+                                });
+                            });
+
+                        }).on("error", (err) => {
+                            logger.run("error", err)
                         });
                         break;
                     case "2":
