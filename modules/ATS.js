@@ -9,7 +9,10 @@ const uri = "mongodb://localhost:27017/";
 module.exports.run = async(message) => {
     try {
         if (message.channel.parent.id == config.supportID) {
-
+            let DiscordID = "";
+            message.channel.messages.fetch().then(x => {
+                DiscordID = x.array()[x.array().length - 1].content.split(" ")[0]
+            })
             let reg = /\d/
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
@@ -17,7 +20,7 @@ module.exports.run = async(message) => {
                 .setDescription('Welcome to our Automated Ticket System or in short ATS.\nI will try my best to Assist you with your Issues, Problems and Questions.\nPlease reply with one of the Following Numbers.\n\n**1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n**2.)** I want a refund.\n\n**3.)** I want to report a Bug or an Issue.\n\n**4.)** I have a Problem with my Purchase or my Product (HWID).')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-            message.channel.send(`You have a total of 5 tries before the Ticket will be Terminated.`, {
+            message.channel.send(DiscordID + `\n***REPLY WITH NUMBERS 1 TO 4 ONLY***`, {
                 embed: embed
             });
             const filter = m => m.content.match(reg)
@@ -76,7 +79,7 @@ module.exports.run = async(message) => {
                                         .setDescription('You already asked for a trial. Or at least your Discord UserID is in our Databse. If you think this is a mistake make sure to ping any of the Staff Members :)')
                                         .setTimestamp()
                                         .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                                    return message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                                    return message.channel.send(``, {
                                         embed: embed
                                     });
 
@@ -94,7 +97,7 @@ module.exports.run = async(message) => {
                             .setDescription('As we stated in our [Terms of Service](https://www.lol-script.com/terms-of-service/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
                             .setTimestamp()
                             .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                        message.channel.send(``, {
                             embed: embed
                         });
                         break;
@@ -105,7 +108,7 @@ module.exports.run = async(message) => {
                             .setDescription('If you have a bug or any kind of Problem with our Product please follow the Template:\n\nVersion Number:\n\nWhat did you want to do:\n\nWhat happened:\n\nWere you able to reproduce it?\n\nHow did you reproduce the Issue?\n\n If it happened Ingame, please include the logs file and Screenshots / Videos')
                             .setTimestamp()
                             .setFooter('Did i hear bugs ? GIMME GIMME', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                        message.channel.send(``, {
                             embed: embed
                         });
                         break;
@@ -116,7 +119,7 @@ module.exports.run = async(message) => {
                             .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!650128095856033794> or <@!306082546209521664>')
                             .setTimestamp()
                             .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                        message.channel.send(``, {
                             embed: embed
                         });
                         break;
@@ -130,7 +133,7 @@ module.exports.run = async(message) => {
                                 .setDescription('Make sure to only respond 1, 2 or 3 :)')
                                 .setTimestamp()
                                 .setFooter('Can you even read ?', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                            message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                            message.channel.send(``, {
                                 embed: embed
                             });
                         }
