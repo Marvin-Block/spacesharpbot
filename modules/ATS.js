@@ -9,10 +9,8 @@ const uri = "mongodb://localhost:27017/";
 module.exports.run = async(message) => {
     try {
         if (message.channel.parent.id == config.supportID) {
-            let DiscordID = "";
-            message.channel.messages.fetch().then(x => {
-                DiscordID = x.array()[x.array().length - 1].content.split(" ")[0]
-            })
+            let DiscordID = await message.channel.messages.cache.array()[0].content.split(" ")[0];
+            //[message.channel.messages.cache.array.array().length - 1].content.split(" ")[0];
             let reg = /\d/
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
@@ -20,7 +18,7 @@ module.exports.run = async(message) => {
                 .setDescription('Welcome to our Automated Ticket System or in short ATS.\nI will try my best to Assist you with your Issues, Problems and Questions.\nPlease reply with one of the Following Numbers.\n\n**1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n**2.)** I want a refund.\n\n**3.)** I want to report a Bug or an Issue.\n\n**4.)** I have a Problem with my Purchase or my Product (HWID).')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-            message.channel.send(DiscordID + `\n***REPLY WITH NUMBERS 1 TO 4 ONLY***`, {
+            message.channel.send(`${DiscordID}\n***REPLY WITH NUMBERS 1 TO 4 ONLY***`, {
                 embed: embed
             });
             const filter = m => m.content.match(reg)
