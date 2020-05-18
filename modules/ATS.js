@@ -61,9 +61,10 @@ module.exports.run = async(message) => {
                                                     .setDescription(data)
                                                     .setTimestamp()
                                                     .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                                                message.channel.send(`This is still a work in Progress. Mistakes will happen.`, {
+                                                message.channel.send(``, {
                                                     embed: embed
                                                 });
+                                                message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
                                             });
 
                                         }).on("error", (err) => {
@@ -77,9 +78,10 @@ module.exports.run = async(message) => {
                                         .setDescription('You already asked for a trial. Or at least your Discord UserID is in our Databse. If you think this is a mistake make sure to ping any of the Staff Members :)')
                                         .setTimestamp()
                                         .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                                    return message.channel.send(``, {
+                                    message.channel.send(``, {
                                         embed: embed
                                     });
+                                    message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
 
                                 }
                             }).catch(err => {
