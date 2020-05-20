@@ -114,7 +114,7 @@ module.exports.run = async(message) => {
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('We dont do refunds <:cryrage:710881155532062871>')
-                            .setDescription('As we stated in our [Terms of Service](https://www.lol-script.com/terms-of-service/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
+                            .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
                             .setTimestamp()
                             .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
                         message.channel.send(``, {
