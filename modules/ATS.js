@@ -2,8 +2,10 @@ const discord = require("discord.js");
 const config = require("../config/config.json")
 const logger = require("../modules/logger.js")
 const https = require('https')
+const request = require('requestretry')
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb://localhost:27017/";
+const APIurl = "https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
 
 
 module.exports.run = async(message) => {
@@ -50,26 +52,44 @@ module.exports.run = async(message) => {
                                         logger.run("info", "A new license has been added", __filename.split('\\').pop())
                                         db.close();
                                         let data = '';
-                                        https.get("https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1", (res) => {
-                                            res.on('data', (chunk) => {
-                                                data += chunk;
-                                            });
-                                            res.on('end', () => {
+
+
+
+                                        request({
+                                            url: APIurl,
+                                            json: false,
+                                            maxAttempts: 5,  // (default) try 5 times 
+                                            retryDelay: 1500, // (default) wait for 5s before trying again
+                                            retrySrategy: request.RetryStrategies.HTTPOrNetworkError // (default) retry on 5xx or network errors
+                                          }, function(err, response, body){
+                                            // this callback will only be called when the request succeeded or after maxAttempts or on error 
+                                            if(response.attempts >= 5){
+                                                var embed = new discord.MessageEmbed()
+                                                    .setColor('#FA759E')
+                                                    .setTitle('That was not supposed to happen')
+                                                    .setDescription("There Seems to have been an ***Error*** Please message <@!322659763643088897>")
+                                                    .setTimestamp()
+                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                                message.channel.send(``, {
+                                                    embed: embed
+                                                });
+                                                //message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
+                                            }else{
                                                 var embed = new discord.MessageEmbed()
                                                     .setColor('#FA759E')
                                                     .setTitle('Take your trial, hope you enjoy it')
-                                                    .setDescription(data)
+                                                    .setDescription(body)
                                                     .setTimestamp()
                                                     .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
                                                 message.channel.send(``, {
                                                     embed: embed
                                                 });
                                                 message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
-                                            });
-
-                                        }).on("error", (err) => {
-                                            logger.run("error", err)
-                                        });
+                                            }
+                                            if (response) {
+                                              //console.log('The number of request attempts: ' + response.attempts);
+                                            }
+                                          })
                                     });
                                 } else {
                                     var embed = new discord.MessageEmbed()
