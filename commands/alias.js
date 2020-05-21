@@ -61,10 +61,11 @@ module.exports.run = async(client, message, args) => {
             case "add":
                 if (args.length <= 2) return message.channel.send(":x: Error creating Alias")
                 if (args[1].startsWith('"') && args[1].endsWith('"') && args[1].replace(/^"|"$/g, '').length != 0) {
-                    let content = ""
-                    for (let i = 2; i < args.length; i++) {
-                        content += args[i] + ' '
-                    }
+                    //let content = "";
+                    let content = message.content.split(message.content.match(/(["])(?:(?=(\\?))\2.)*?\1/)[0])[1]
+                        // for (let i = 2; i < args.length; i++) {
+                        //     content += args[i] + ' '
+                        // }
                     MongoClient.connect(uri, {
                         useUnifiedTopology: true
                     }, function(err, db) {
@@ -100,7 +101,7 @@ module.exports.run = async(client, message, args) => {
                                     }
                                     logger.run("info", "A new Alias has been added", __filename.split('\\').pop())
                                     db.close();
-                                    return message.channel.send(":white_check_mark: Alias **__" + args[1].replace(/^"|"$/g, '') + "__** was created succesfully")
+                                    return message.channel.send(":white_check_mark: Alias **__" + args[1].replace(/^"|"$/g, '') + "__** was created succesfully (ID: " + parseInt(num + 1))
                                 });
                             } else {
                                 return message.channel.send(":x: An alias with that already exists");
