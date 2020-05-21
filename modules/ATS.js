@@ -10,7 +10,6 @@ module.exports.run = async(message) => {
     try {
         if (message.channel.parent.id == config.supportID) {
             let DiscordID = await message.channel.messages.cache.array()[0].content.split(" ")[0];
-            //[message.channel.messages.cache.array.array().length - 1].content.split(" ")[0];
             let reg = /\d/
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
