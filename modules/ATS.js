@@ -57,12 +57,12 @@ module.exports.run = async(message) => {
                                         request({
                                             url: APIurl,
                                             json: false,
-                                            maxAttempts: 5,  // (default) try 5 times 
+                                            maxAttempts: 5, // (default) try 5 times 
                                             retryDelay: 1500, // (default) wait for 5s before trying again
                                             retrySrategy: request.RetryStrategies.HTTPOrNetworkError // (default) retry on 5xx or network errors
-                                          }, function(err, response, body){
+                                        }, function(err, response, body) {
                                             // this callback will only be called when the request succeeded or after maxAttempts or on error 
-                                            if(response.attempts >= 5){
+                                            if (response.attempts >= 5) {
                                                 var embed = new discord.MessageEmbed()
                                                     .setColor('#FA759E')
                                                     .setTitle('That was not supposed to happen')
@@ -73,7 +73,7 @@ module.exports.run = async(message) => {
                                                     embed: embed
                                                 });
                                                 //message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
-                                            }else{
+                                            } else {
                                                 var embed = new discord.MessageEmbed()
                                                     .setColor('#FA759E')
                                                     .setTitle('Take your trial, hope you enjoy it')
@@ -86,15 +86,15 @@ module.exports.run = async(message) => {
                                                 message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
                                             }
                                             if (response) {
-                                              //console.log('The number of request attempts: ' + response.attempts);
+                                                //console.log('The number of request attempts: ' + response.attempts);
                                             }
-                                          })
+                                        })
                                     });
                                 } else {
                                     var embed = new discord.MessageEmbed()
                                         .setColor('#FA759E')
                                         .setTitle('Seems like you already had your Trial <:Spout:711654821157142598>')
-                                        .setDescription('You already asked for a trial. Or at least your Discord UserID is in our Databse. If you think this is a mistake make sure to ping any of the Staff Members :)')
+                                        .setDescription('You already asked for a trial. If you think this is a mistake make sure to ping any of the Staff Members :)')
                                         .setTimestamp()
                                         .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
                                     message.channel.send(``, {
