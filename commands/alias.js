@@ -13,9 +13,25 @@ const MongoClient = require('mongodb').MongoClient;
 const logger = require("../modules/logger.js");
 const discord = require("discord.js");
 let config = require("../config/config.json")
+const Pagination = require('discord-paginationembed');
 const fs = require("fs");
 const uri = "mongodb://localhost:27017/";
 
+/**
+ * Returns an array with arrays of the given size.
+ *
+ * @param myArray {Array} Array to split
+ * @param chunkSize {Integer} Size of every group
+ */
+function chunkArray(myArray, chunk_size) {
+    var results = [];
+
+    while (myArray.length) {
+        results.push(myArray.splice(0, chunk_size));
+    }
+
+    return results;
+}
 
 module.exports.run = async(client, message, args) => {
     try {
@@ -30,7 +46,7 @@ module.exports.run = async(client, message, args) => {
                     }
                     var dbo = db.db("Spacesharp");
                     dbo.collection("alias").find().toArray().then(x => {
-                        let body = "";
+                        let body = [];
                         x.forEach(entry => {
                             let content = "";
                             entry.content.split(" ").forEach(word => {
@@ -39,15 +55,33 @@ module.exports.run = async(client, message, args) => {
                                 }
                                 content += word + " ";
                             })
-                            body += `> ${entry.id}.) ${entry.name} => ${content}\n\n`
-                        })
-                        if (body.length > 2000) {
-                            message.channel.send(":x: Error. Please contact an Admin and check the logs :)")
-                            throw "Message has over 2000 Characters. Implement a multi message solution";
-                        } else if (body.length == 0) {
+                            body.push(`${entry.id}.) "**${entry.name}**"  ${content}\n\n`);
+                        });
+
+                        if (body.length == 0) {
                             message.channel.send(":x: There are no entries in this list.")
                         } else {
-                            message.channel.send(body)
+
+                            var result = chunkArray(body, 5);
+
+                            const embeds = [];
+
+                            for (let i = 0; i <= result.length; i++) {
+                                let embed = new discord.MessageEmbed()
+                                    .setColor('#FA759E')
+                                    .setTitle('Here is your List of Aliases')
+                                    .setDescription(result[i])
+                                    .setTimestamp()
+                                    .setFooter("'sup bitch :)", 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                embeds.push(embed);
+                            }
+                            new Pagination.Embeds()
+                                .setArray(embeds)
+                                .setAuthorizedUsers([message.author.id])
+                                .setChannel(message.channel)
+                                .setPageIndicator(true)
+                                .setPage(1)
+                                .build();
                         };
 
                         db.close();
@@ -63,9 +97,6 @@ module.exports.run = async(client, message, args) => {
                 if (args[1].startsWith('"') && args[1].endsWith('"') && args[1].replace(/^"|"$/g, '').length != 0) {
                     //let content = "";
                     let content = message.content.split(message.content.match(/(["])(?:(?=(\\?))\2.)*?\1/)[0])[1]
-                        // for (let i = 2; i < args.length; i++) {
-                        //     content += args[i] + ' '
-                        // }
                     MongoClient.connect(uri, {
                         useUnifiedTopology: true
                     }, function(err, db) {
@@ -144,8 +175,6 @@ module.exports.run = async(client, message, args) => {
                     }
 
                 }, );
-
-
 
                 break;
 
