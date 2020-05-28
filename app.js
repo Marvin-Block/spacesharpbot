@@ -77,6 +77,34 @@ client.on("message", async message => {
 client.on("message", async message => {
     if (message.author.id != '557628352828014614') return;
     if (message.mentions.users.size != 1) return;
+    const Pagination = require('discord-paginationembed');
+
+    const embeds = [];
+
+    for (let i = 1; i <= 5; ++i)
+        embeds.push(new discord.MessageEmbed().addField('Page', i));
+
+    const myImage = message.author.displayAvatarURL();
+
+    new Pagination.Embeds()
+        .setArray(embeds)
+        .setAuthorizedUsers([message.author.id])
+        .setChannel(message.channel)
+        .setPageIndicator(true)
+        .setPage(3)
+        // Methods below are for customising all embeds
+        .setImage(myImage)
+        .setThumbnail(myImage)
+        .setTitle('Test Title')
+        .setDescription('Test Description')
+        .setFooter('Test Footer Text')
+        .setURL(myImage)
+        .setColor(0xFF00AE)
+        .addField('\u200b', '\u200b')
+        .addField('Test Field 1', 'Test Field 1', true)
+        .addField('Test Field 2', 'Test Field 2', true)
+        .build();
+
     ATS.run(message)
 });
 
