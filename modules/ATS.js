@@ -1,9 +1,10 @@
 const discord = require("discord.js");
 const config = require("../config/config.json")
 const logger = require("../modules/logger.js")
-const https = require('https')
 const request = require('requestretry')
 const MongoClient = require('mongodb').MongoClient;
+const newdate = new Date();
+newdate.setDate(newdate.getDate() - 1);
 const uri = "mongodb://localhost:27017/";
 const APIurl = "https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
 
@@ -12,6 +13,8 @@ module.exports.run = async(message) => {
     try {
         if (message.channel.parent.id == config.supportID) {
             let DiscordID = await message.channel.messages.cache.array()[0].content.split(" ")[0];
+            //Debugging
+            //if (DiscordID != "<@715574457598476319>") return;
             let reg = /\d/
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
@@ -27,8 +30,11 @@ module.exports.run = async(message) => {
             const collector = message.channel.createMessageCollector(filter, { time: 3600000, max: 5 });
 
             collector.on('collect', collected => {
+                //debuggin
+                //if (collected.author.id != "715574457598476319") return;
                 switch (collected.content) {
                     case "1":
+                        if (collected.author.createdAt < newdate) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
                         }, function(err, db) {
@@ -51,9 +57,6 @@ module.exports.run = async(message) => {
                                         logger.run("info", "A new license has been added", __filename.split('\\').pop())
                                         db.close();
                                         let data = '';
-
-
-
                                         request({
                                             url: APIurl,
                                             json: false,
