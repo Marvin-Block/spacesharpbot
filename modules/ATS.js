@@ -34,7 +34,7 @@ module.exports.run = async(message) => {
                 //if (collected.author.id != "715574457598476319") return;
                 switch (collected.content) {
                     case "1":
-                        if (collected.author.createdAt < newdate) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                        //if (collected.author.createdAt < newdate) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
                         }, function(err, db) {
