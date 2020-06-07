@@ -19,10 +19,16 @@ module.exports.run = async(message) => {
             var embed = new discord.MessageEmbed()
                 .setColor('#FA759E')
                 .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
-                .setDescription('Welcome to our Automated Ticket System or in short ATS.\nI will try my best to Assist you with your Issues, Problems and Questions.\nPlease reply with one of the Following Numbers.\n\n**1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n**2.)** I want a refund.\n\n**3.)** I want to report a Bug or an Issue.\n\n**4.)** I have a Problem with my Purchase or my Product (HWID).')
+                .setDescription('Welcome to our Automated Ticket System or in short ATS.\n\
+                    I will try my best to Assist you with your Issues, Problems and Questions.\n\
+                    Please reply with one of the Following Numbers.\n\n\
+                    **1.)** I want to have a Trial and Test Spacesharp before i buy it.\n\n\
+                    **2.)** I want to report a Bug or an Issue.\n\n\
+                    **3.)** I have a Problem with my Purchase or my Product (HWID).\n\n\
+                    **4.)** None of the Above')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-            message.channel.send(`${DiscordID}\n***REPLY WITH NUMBERS 1 TO 4 ONLY***`, {
+            message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2*** or ***3***`, {
                 embed: embed
             });
             const filter = m => m.content.match(reg)
@@ -32,6 +38,9 @@ module.exports.run = async(message) => {
             collector.on('collect', collected => {
                 //debuggin
                 //if (collected.author.id != "715574457598476319") return;
+                if(collected.content.startsWith("1.)") || collected.content.startsWith("1.") ||collected.content.startsWith("1.)I want to have a Trial and Test Spacesharp before i buy it.".toLowerCase)){
+                    collected.content = "1";
+                }
                 switch (collected.content) {
                     case "1":
                         //if (collected.author.createdAt < newdate) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
@@ -112,18 +121,18 @@ module.exports.run = async(message) => {
                         }, );
 
                         break;
+                    // case "2":
+                    //     var embed = new discord.MessageEmbed()
+                    //         .setColor('#FA759E')
+                    //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
+                    //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
+                    //         .setTimestamp()
+                    //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                    //     message.channel.send(``, {
+                    //         embed: embed
+                    //     });
+                    //     break;
                     case "2":
-                        var embed = new discord.MessageEmbed()
-                            .setColor('#FA759E')
-                            .setTitle('We dont do refunds <:cryrage:710881155532062871>')
-                            .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
-                            .setTimestamp()
-                            .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(``, {
-                            embed: embed
-                        });
-                        break;
-                    case "3":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('So you wanna report a bug ? <:monkabigs:710896245526495243>')
@@ -134,11 +143,22 @@ module.exports.run = async(message) => {
                             embed: embed
                         });
                         break;
-                    case "4":
+                    case "3":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
                             .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!650128095856033794> or <@!306082546209521664>')
+                            .setTimestamp()
+                            .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        message.channel.send(``, {
+                            embed: embed
+                        });
+                        break;
+                        case "4":
+                        var embed = new discord.MessageEmbed()
+                            .setColor('#FA759E')
+                            .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
+                            .setDescription('Dont worry, our Staff-Team will respond shortly. Please be patient.')
                             .setTimestamp()
                             .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
                         message.channel.send(``, {
