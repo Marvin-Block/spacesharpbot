@@ -4,7 +4,6 @@ const logger = require("../modules/logger.js")
 const request = require('requestretry')
 const MongoClient = require('mongodb').MongoClient;
 const newdate = new Date().valueOf() - 86500000;
-newdate.setDate(newdate.getDate() - 1);
 const uri = "mongodb://localhost:27017/";
 const APIurl = "https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
 
