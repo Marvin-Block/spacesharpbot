@@ -1,0 +1,28 @@
+const Discord = require("discord.js");
+const logger = require("./logger.js");
+const newdate = new Date().valueOf();
+const oneDay = 86500000;
+
+module.exports.run = async(client, member) => {
+    // work in progress
+    // return;
+    try {
+        var embed = new Discord.MessageEmbed()
+            .setColor('#FA759E')
+            .setTitle('A new User Joined')
+            .setThumbnail(member.user.avatarUrl)
+            .setDescription(`\
+            __Username:__ ${member.user.username}\n\
+            __User:__ <@${member.id}>\n\
+            __Account created:__ ${(new Date(member.user.createdTimestamp)).toUTCString()}\n\
+            __Account joined:__ ${(new Date(member.joinedTimestamp)).toUTCString()}\n\
+            __Approx. Age:__ ${Math.round((newdate - member.user.createdTimestamp) / oneDay)} Days`)
+            .setTimestamp()
+            .setFooter(`User ID: ${member.id}` , 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684')
+        client.channels.cache.get('708713756104065044').send(``, {
+            embed: embed
+        })
+    } catch (error) {
+        logger.run("error", error)
+    }
+}

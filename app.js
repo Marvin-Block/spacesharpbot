@@ -81,7 +81,7 @@ client.on("message", async message => {
 });
 
 client.on('guildMemberAdd', async member => {
-    exports.logNewUser.run(client,member);
+    exports.userlogs.run(client,member);
 });
 
 client.on('channelCreate', async function(channel) {
