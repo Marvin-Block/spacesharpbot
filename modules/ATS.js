@@ -3,7 +3,6 @@ const config = require("../config/config.json")
 const logger = require("../modules/logger.js")
 const request = require('requestretry')
 const MongoClient = require('mongodb').MongoClient;
-const newdate = new Date().valueOf();
 const uri = "mongodb://localhost:27017/";
 const APIurl = "https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
 
@@ -42,7 +41,7 @@ module.exports.run = async(message) => {
                 }
                 switch (collected.content) {
                     case "1":
-                    if (Math.floor(newdate - new Date(collected.author.createdAt).valueOf()) < 1 ) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                    if (Math.floor((new Date()) - new Date(collected.author.createdAt).valueOf()) < 1 ) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
                         }, function(err, db) {

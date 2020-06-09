@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const logger = require("./logger.js");
-const newdate = new Date().valueOf();
 const oneDay = 86500000;
 
 module.exports.run = async(client, member) => {
@@ -16,7 +15,7 @@ module.exports.run = async(client, member) => {
             __User:__ <@${member.id}>\n\
             __Account created:__ ${(new Date(member.user.createdTimestamp)).toUTCString()}\n\
             __Account joined:__ ${(new Date(member.joinedTimestamp)).toUTCString()}\n\
-            __Approx. Age:__ ${Math.round((newdate - member.user.createdTimestamp) / oneDay)} Days`)
+            __Approx. Age:__ ${Math.round(((new Date()) - member.user.createdTimestamp) / oneDay)} Days`)
             .setTimestamp()
             .setFooter(`User ID: ${member.id}` , 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684')
         client.channels.cache.get('708713756104065044').send(``, {
