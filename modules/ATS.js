@@ -173,17 +173,6 @@ module.exports.run = async (message) => {
                         });
                         break;
                     default:
-                        if (message.author.id == '707528424054587433') return;
-                        var embed = new discord.MessageEmbed()
-                            .setColor('#FA759E')
-                            .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
-                            .setDescription('Make sure to only respond with the numbers 1, 2, 3 or 4 :)')
-                            .setTimestamp()
-                            .setFooter('Can you even read ?', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(``, {
-                            embed: embed
-                        });
-
                         break;
                 }
             });
@@ -349,16 +338,7 @@ module.exports.run = async (message) => {
                         });
                         break;
                     default:
-                        if (message.author.id == '707528424054587433') return;
-                        var embed = new discord.MessageEmbed()
-                            .setColor('#FA759E')
-                            .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
-                            .setDescription('Make sure to only respond 1, 2 or 3 :)')
-                            .setTimestamp()
-                            .setFooter('Can you even read ?', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                        message.channel.send(``, {
-                            embed: embed
-                        });
+                        //just do nothing i guess
                         break;
                 }
             });
