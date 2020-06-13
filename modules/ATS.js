@@ -9,7 +9,7 @@ const spacegliderAPI = "https://lizenz.lol-script.com/api/spaceglider/testlicenc
 const oneDay = 86500000;
 
 
-module.exports.run = async(message) => {
+module.exports.run = async (message) => {
     try {
         if (message.channel.parent.id == config.supportID) {
             let DiscordID = await message.channel.messages.cache.array()[0].content.split(" ")[0];
@@ -28,37 +28,44 @@ module.exports.run = async(message) => {
                     **4.)** None of the Above')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-            message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2*** or ***3***`, {
+            message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2***, ***3*** or ***4***`, {
                 embed: embed
             });
             const filter = m => m.content.match(reg)
 
-            const collector = message.channel.createMessageCollector(filter, { time: 3600000, max: 5 });
+            const collector = message.channel.createMessageCollector(filter, {
+                time: 3600000,
+                max: 5
+            });
 
             collector.on('collect', collected => {
                 //debuggin
                 //if (collected.author.id != "715574457598476319") return;
-                if(collected.content.startsWith("1.)") || collected.content.startsWith("1.") ||collected.content.startsWith("1.)I want to have a Trial and Test Spacesharp before i buy it.".toLowerCase)){
+                if (collected.content.startsWith("1.)") || collected.content.startsWith("1.") || collected.content.startsWith("1.)I want to have a Trial and Test Spacesharp before i buy it.".toLowerCase)) {
                     collected.content = "1";
                 }
                 switch (collected.content) {
                     case "1":
-                    if ((Math.round((new Date()) - collected.author.createdTimestamp) / oneDay) < 1 ) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                        if ((Math.round((new Date()) - collected.author.createdTimestamp) / oneDay) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
-                        }, function(err, db) {
+                        }, function (err, db) {
                             if (err) {
                                 logger.run("error", err, __filename.split('\\').pop());
                                 message.channel.send(":x: Seems like there was an error");
                             }
                             var dbo = db.db("Spacesharp");
-                            dbo.collection("license").find({ UserID: { $eq: collected.author.id } }).toArray().then(x => {
+                            dbo.collection("license").find({
+                                UserID: {
+                                    $eq: collected.author.id
+                                }
+                            }).toArray().then(x => {
                                 if (x.length < 1) {
                                     var myobj = {
                                         UserID: collected.author.id
                                     };
                                     // 
-                                    dbo.collection("license").insertOne(myobj, function(err, res) {
+                                    dbo.collection("license").insertOne(myobj, function (err, res) {
                                         if (err) {
                                             logger.run("error", err, __filename.split('\\').pop());
                                             message.channel.send(":x: Seems like there was an error");
@@ -72,7 +79,7 @@ module.exports.run = async(message) => {
                                             maxAttempts: 5, // (default) try 5 times 
                                             retryDelay: 1500, // (default) wait for 5s before trying again
                                             retrySrategy: request.RetryStrategies.HTTPOrNetworkError // (default) retry on 5xx or network errors
-                                        }, function(err, response, body) {
+                                        }, function (err, response, body) {
                                             // this callback will only be called when the request succeeded or after maxAttempts or on error 
                                             if (response.attempts >= 5) {
                                                 var embed = new discord.MessageEmbed()
@@ -121,17 +128,17 @@ module.exports.run = async(message) => {
                         }, );
 
                         break;
-                    // case "2":
-                    //     var embed = new discord.MessageEmbed()
-                    //         .setColor('#FA759E')
-                    //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
-                    //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
-                    //         .setTimestamp()
-                    //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                    //     message.channel.send(``, {
-                    //         embed: embed
-                    //     });
-                    //     break;
+                        // case "2":
+                        //     var embed = new discord.MessageEmbed()
+                        //         .setColor('#FA759E')
+                        //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
+                        //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
+                        //         .setTimestamp()
+                        //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        //     message.channel.send(``, {
+                        //         embed: embed
+                        //     });
+                        //     break;
                     case "2":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
@@ -154,7 +161,7 @@ module.exports.run = async(message) => {
                             embed: embed
                         });
                         break;
-                        case "4":
+                    case "4":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
@@ -166,24 +173,20 @@ module.exports.run = async(message) => {
                         });
                         break;
                     default:
-                        if (message.guild.members.cache.get(message.author.id).hasPermission("ADMINISTRATOR")) {
-                            return;
-                        } else {
-                            var embed = new discord.MessageEmbed()
-                                .setColor('#FA759E')
-                                .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
-                                .setDescription('Make sure to only respond 1, 2 or 3 :)')
-                                .setTimestamp()
-                                .setFooter('Can you even read ?', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                            message.channel.send(``, {
-                                embed: embed
-                            });
-                        }
+                        var embed = new discord.MessageEmbed()
+                            .setColor('#FA759E')
+                            .setTitle('I\'m here to help you <a:wavey:710870264778588250>')
+                            .setDescription('Make sure to only respond with the numbers 1, 2, 3 or 4 :)')
+                            .setTimestamp()
+                            .setFooter('Can you even read ?', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        message.channel.send(``, {
+                            embed: embed
+                        });
+
                         break;
                 }
             });
-        }
-        else if(message.channel.parent.id == '601190196230225948'){
+        } else if (message.channel.parent.id == '601190196230225948') {
             let DiscordID = await message.channel.messages.cache.array()[0].content.split(" ")[0];
             //Debugging
             //if (DiscordID != "<@715574457598476319>") return;
@@ -205,32 +208,39 @@ module.exports.run = async(message) => {
             });
             const filter = m => m.content.match(reg)
 
-            const collector = message.channel.createMessageCollector(filter, { time: 3600000, max: 5 });
+            const collector = message.channel.createMessageCollector(filter, {
+                time: 3600000,
+                max: 5
+            });
 
             collector.on('collect', collected => {
                 //debuggin
                 //if (collected.author.id != "715574457598476319") return;
-                if(collected.content.startsWith("1.)") || collected.content.startsWith("1.") ||collected.content.startsWith("1.)I want to have a Trial and Test Spaceglider before i buy it.".toLowerCase)){
+                if (collected.content.startsWith("1.)") || collected.content.startsWith("1.") || collected.content.startsWith("1.)I want to have a Trial and Test Spaceglider before i buy it.".toLowerCase)) {
                     collected.content = "1";
                 }
                 switch (collected.content) {
                     case "1":
-                    if (Math.floor((new Date()) - new Date(collected.author.createdAt).valueOf()) < 1 ) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                        if (Math.floor((new Date()) - new Date(collected.author.createdAt).valueOf()) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
-                        }, function(err, db) {
+                        }, function (err, db) {
                             if (err) {
                                 logger.run("error", err, __filename.split('\\').pop());
                                 message.channel.send(":x: Seems like there was an error");
                             }
                             var dbo = db.db("Spaceglider");
-                            dbo.collection("license").find({ UserID: { $eq: collected.author.id } }).toArray().then(x => {
+                            dbo.collection("license").find({
+                                UserID: {
+                                    $eq: collected.author.id
+                                }
+                            }).toArray().then(x => {
                                 if (x.length < 1) {
                                     var myobj = {
                                         UserID: collected.author.id
                                     };
                                     // 
-                                    dbo.collection("license").insertOne(myobj, function(err, res) {
+                                    dbo.collection("license").insertOne(myobj, function (err, res) {
                                         if (err) {
                                             logger.run("error", err, __filename.split('\\').pop());
                                             message.channel.send(":x: Seems like there was an error");
@@ -244,7 +254,7 @@ module.exports.run = async(message) => {
                                             maxAttempts: 5, // (default) try 5 times 
                                             retryDelay: 1500, // (default) wait for 5s before trying again
                                             retrySrategy: request.RetryStrategies.HTTPOrNetworkError // (default) retry on 5xx or network errors
-                                        }, function(err, response, body) {
+                                        }, function (err, response, body) {
                                             // this callback will only be called when the request succeeded or after maxAttempts or on error 
                                             if (response.attempts >= 5) {
                                                 var embed = new discord.MessageEmbed()
@@ -293,17 +303,17 @@ module.exports.run = async(message) => {
                         }, );
 
                         break;
-                    // case "2":
-                    //     var embed = new discord.MessageEmbed()
-                    //         .setColor('#FA759E')
-                    //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
-                    //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
-                    //         .setTimestamp()
-                    //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                    //     message.channel.send(``, {
-                    //         embed: embed
-                    //     });
-                    //     break;
+                        // case "2":
+                        //     var embed = new discord.MessageEmbed()
+                        //         .setColor('#FA759E')
+                        //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
+                        //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
+                        //         .setTimestamp()
+                        //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        //     message.channel.send(``, {
+                        //         embed: embed
+                        //     });
+                        //     break;
                     case "2":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
@@ -326,7 +336,7 @@ module.exports.run = async(message) => {
                             embed: embed
                         });
                         break;
-                        case "4":
+                    case "4":
                         var embed = new discord.MessageEmbed()
                             .setColor('#FA759E')
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
