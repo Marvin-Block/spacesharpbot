@@ -6,6 +6,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb://localhost:27017/";
 const spacesharpAPI = "https://lizenz.lol-script.com/api/spacesharp/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
 const spacegliderAPI = "https://lizenz.lol-script.com/api/spaceglider/testlicence?pass=2d2pPb6BNcylbrHhZLsRItjOMpj04k3QsgiS0p5w11pdD3SG4FPE6pq6sMTPOiUBYNN0Sf4CkYRW5no1ghXDftZusanYonGJcojK1ypcxFzoNYsJ2naNRHxpuOEac4m1"
+const logo = "https://cdn.discordapp.com/attachments/716556635841101825/716871076344234084/NEW-LOGO-GIF-v3.gif"
 const oneDay = 86500000;
 
 
@@ -27,7 +28,7 @@ module.exports.run = async (message) => {
                     **3.)** I have a Problem with my Purchase or my Product (HWID).\n\n\
                     **4.)** None of the Above')
                 .setTimestamp()
-                .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                .setFooter('Hello there General Kenobi', logo);
             message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2***, ***3*** or ***4***`, {
                 embed: embed
             });
@@ -35,7 +36,6 @@ module.exports.run = async (message) => {
 
             const collector = message.channel.createMessageCollector(filter, {
                 time: 3600000,
-                max: 5
             });
 
             collector.on('collect', collected => {
@@ -81,28 +81,27 @@ module.exports.run = async (message) => {
                                             retrySrategy: request.RetryStrategies.HTTPOrNetworkError // (default) retry on 5xx or network errors
                                         }, function (err, response, body) {
                                             // this callback will only be called when the request succeeded or after maxAttempts or on error 
-                                            if (response.attempts >= 5) {
-                                                var embed = new discord.MessageEmbed()
-                                                    .setColor('#FA759E')
-                                                    .setTitle('That was not supposed to happen')
-                                                    .setDescription("There Seems to have been an ***Error*** Please message <@!322659763643088897>")
-                                                    .setTimestamp()
-                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
-                                                message.channel.send(``, {
-                                                    embed: embed
-                                                });
-                                                //message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
-                                            } else {
+                                            if (response.statusCode >= 200 && response.statusCode < 300) {
                                                 var embed = new discord.MessageEmbed()
                                                     .setColor('#FA759E')
                                                     .setTitle('Take your trial, hope you enjoy it')
                                                     .setDescription(body)
                                                     .setTimestamp()
-                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                                    .setFooter('UwU', logo);
                                                 message.channel.send(``, {
                                                     embed: embed
                                                 });
                                                 message.channel.send(`${DiscordID} Please click on the 🔒 on the first message to close the ticket.`);
+                                            } else {
+                                                var embed = new discord.MessageEmbed()
+                                                    .setColor('#FA759E')
+                                                    .setTitle('That was not supposed to happen')
+                                                    .setDescription("There Seems to have been an **Error** Please message <@!322659763643088897>")
+                                                    .setTimestamp()
+                                                    .setFooter('UwU', logo);
+                                                message.channel.send(``, {
+                                                    embed: embed
+                                                });
                                             }
                                             if (response) {
                                                 //console.log('The number of request attempts: ' + response.attempts);
@@ -115,7 +114,7 @@ module.exports.run = async (message) => {
                                         .setTitle('Seems like you already had your Trial <:Spout:711654821157142598>')
                                         .setDescription('You already asked for a trial. If you think this is a mistake make sure to ping any of the Staff Members :)')
                                         .setTimestamp()
-                                        .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                        .setFooter('How dare you ask for more than you can swallow', logo);
                                     message.channel.send(``, {
                                         embed: embed
                                     });
@@ -134,7 +133,7 @@ module.exports.run = async (message) => {
                         //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
                         //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
                         //         .setTimestamp()
-                        //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        //         .setFooter('Who told you you\'d get a refund', logo);
                         //     message.channel.send(``, {
                         //         embed: embed
                         //     });
@@ -145,7 +144,7 @@ module.exports.run = async (message) => {
                             .setTitle('So you wanna report a bug ? <:monkabigs:710896245526495243>')
                             .setDescription('If you have a bug or any kind of Problem with our Product please follow the Template:\n\nVersion Number:\n\nWhat did you want to do:\n\nWhat happened:\n\nWere you able to reproduce it?\n\nHow did you reproduce the Issue?\n\n If it happened Ingame, please include the logs file and Screenshots / Videos')
                             .setTimestamp()
-                            .setFooter('Did i hear bugs ? GIMME GIMME', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('Did i hear bugs ? GIMME GIMME', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
@@ -156,7 +155,7 @@ module.exports.run = async (message) => {
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
                             .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!650128095856033794> or <@!306082546209521664>')
                             .setTimestamp()
-                            .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('We\'ll figure this out, dont worry.', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
@@ -167,7 +166,7 @@ module.exports.run = async (message) => {
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
                             .setDescription('Dont worry, our Staff-Team will respond shortly. Please be patient.')
                             .setTimestamp()
-                            .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('We\'ll figure this out, dont worry.', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
@@ -192,7 +191,7 @@ module.exports.run = async (message) => {
                     **3.)** I have a Problem with my Purchase or my Product (HWID).\n\n\
                     **4.)** None of the Above')
                 .setTimestamp()
-                .setFooter('Hello there General Kenobi', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                .setFooter('Hello there General Kenobi', logo);
             message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2*** or ***3***`, {
                 embed: embed
             });
@@ -252,7 +251,7 @@ module.exports.run = async (message) => {
                                                     .setTitle('That was not supposed to happen')
                                                     .setDescription("There Seems to have been an ***Error*** Please message <@!322659763643088897>")
                                                     .setTimestamp()
-                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                                    .setFooter('UwU', logo);
                                                 message.channel.send(``, {
                                                     embed: embed
                                                 });
@@ -263,7 +262,7 @@ module.exports.run = async (message) => {
                                                     .setTitle('Take your trial, hope you enjoy it')
                                                     .setDescription(body)
                                                     .setTimestamp()
-                                                    .setFooter('UwU', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                                    .setFooter('UwU', logo);
                                                 message.channel.send(``, {
                                                     embed: embed
                                                 });
@@ -280,7 +279,7 @@ module.exports.run = async (message) => {
                                         .setTitle('Seems like you already had your Trial <:Spout:711654821157142598>')
                                         .setDescription('You already asked for a trial. If you think this is a mistake make sure to ping any of the Staff Members :)')
                                         .setTimestamp()
-                                        .setFooter('How dare you ask for more than you can swallow', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                                        .setFooter('How dare you ask for more than you can swallow', logo);
                                     message.channel.send(``, {
                                         embed: embed
                                     });
@@ -299,7 +298,7 @@ module.exports.run = async (message) => {
                         //         .setTitle('We dont do refunds <:cryrage:710881155532062871>')
                         //         .setDescription('As we stated in our [Terms of Service](https://lol-script.com/terms_and_conditions/), and as you have agreed to, we do not give any kind of refund. It is your own responsibility for purchasing this product without using the 1 Day Version to test it.')
                         //         .setTimestamp()
-                        //         .setFooter('Who told you you\'d get a refund', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                        //         .setFooter('Who told you you\'d get a refund', logo);
                         //     message.channel.send(``, {
                         //         embed: embed
                         //     });
@@ -310,7 +309,7 @@ module.exports.run = async (message) => {
                             .setTitle('So you wanna report a bug ? <:monkabigs:710896245526495243>')
                             .setDescription('If you have a bug or any kind of Problem with our Product please follow the Template:\n\nWhat did you want to do:\n\nWhat happened:\n\nWere you able to reproduce it?\n\nHow did you reproduce the Issue?\n\n If it happened Ingame, please include the logs file and Screenshots / Videos')
                             .setTimestamp()
-                            .setFooter('Did i hear bugs ? GIMME GIMME', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('Did i hear bugs ? GIMME GIMME', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
@@ -321,7 +320,7 @@ module.exports.run = async (message) => {
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
                             .setDescription('If you\'ve just bought our Product and didn\'t recieve a mail yet, Please be a bit more Patient. It will surely arrive. If you have an Issue with your Productkey please mention <@!650128095856033794> or <@!306082546209521664>')
                             .setTimestamp()
-                            .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('We\'ll figure this out, dont worry.', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
@@ -332,7 +331,7 @@ module.exports.run = async (message) => {
                             .setTitle('Okay, Let\'s see <:bigglass:710896245530427402>')
                             .setDescription('Dont worry, our Staff-Team will respond shortly. Please be patient.')
                             .setTimestamp()
-                            .setFooter('We\'ll figure this out, dont worry.', 'https://media.discordapp.net/attachments/710857562874183762/710861055248695366/Spacesharp.png?width=684&height=684');
+                            .setFooter('We\'ll figure this out, dont worry.', logo);
                         message.channel.send(``, {
                             embed: embed
                         });
