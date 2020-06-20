@@ -46,7 +46,7 @@ module.exports.run = async (message) => {
                 }
                 switch (collected.content) {
                     case "1":
-                        if ((Math.round((new Date()) - collected.author.createdTimestamp) / oneDay) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                        // if ((Math.round((new Date()) - collected.author.createdTimestamp) / oneDay) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
                         }, function (err, db) {
@@ -210,7 +210,7 @@ module.exports.run = async (message) => {
                 }
                 switch (collected.content) {
                     case "1":
-                        if (Math.floor((new Date()) - new Date(collected.author.createdAt).valueOf()) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
+                        // if (Math.floor((new Date()) - new Date(collected.author.createdAt).valueOf()) < 1) return message.channel.send("It seems that your account is younger than 24hours. You'll have to wait until your account is at least a day old to get a Trial key.")
                         MongoClient.connect(uri, {
                             useUnifiedTopology: true
                         }, function (err, db) {
