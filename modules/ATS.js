@@ -96,7 +96,7 @@ module.exports.run = async (message) => {
                                                 var embed = new discord.MessageEmbed()
                                                     .setColor('#FA759E')
                                                     .setTitle('That was not supposed to happen')
-                                                    .setDescription("There Seems to have been an **Error** Please message <@!322659763643088897>")
+                                                    .setDescription("There Seems to have been an **Error** Please message <@!650128095856033794> to recieve your Trial")
                                                     .setTimestamp()
                                                     .setFooter('UwU', logo);
                                                 message.channel.send(``, {
