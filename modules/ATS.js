@@ -158,9 +158,10 @@ module.exports.run = async (message) => {
                             .setDescription('Please make sure you set the F10 Hotkey correctly. If this still does not fix your issue, restart your PC.')
                             .setTimestamp()
                             .setFooter('We\'ll figure this out, dont worry.', logo);
-                        message.channel.send(`https://media.discordapp.net/attachments/719528494740144228/719534118609616956/unknown.png`, {
+                        message.channel.send(``, {
                             embed: embed
                         });
+                        message.channel.send('https://media.discordapp.net/attachments/719528494740144228/719534118609616956/unknown.png')
                         break;
                     case "5":
                         var embed = new discord.MessageEmbed()
@@ -169,9 +170,10 @@ module.exports.run = async (message) => {
                             .setDescription('Rightclick the Tickettool Bot and go to "Message". This should take you to the private messages with the bot. Here you will find your transcript, which will contain your license.')
                             .setTimestamp()
                             .setFooter('We\'ll figure this out, dont worry.', logo);
-                        message.channel.send(`https://media.discordapp.net/attachments/717424902012928220/717426791165329538/unknown.png`, {
+                        message.channel.send(``, {
                             embed: embed
                         });
+                        message.channel.send('https://media.discordapp.net/attachments/717424902012928220/717426791165329538/unknown.png')
                         break;
                     case "6":
                         var embed = new discord.MessageEmbed()
