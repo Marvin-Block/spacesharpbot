@@ -31,7 +31,7 @@ module.exports.run = async (message) => {
                     **6.)** None of the above')
                 .setTimestamp()
                 .setFooter('Hello there General Kenobi', logo);
-            message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2***, ***3*** or ***4***`, {
+            message.channel.send(`${DiscordID}\nPlease reply with ***1***, ***2***, ***3***, ***4***, ***5*** or ***6***`, {
                 embed: embed
             });
             const filter = m => m.content.match(reg)
